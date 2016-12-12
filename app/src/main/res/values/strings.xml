@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Inventory Wizard</string>
+    <!-- strings for the empty view -->
+    <string name="empty_view_title">Your Inventory is empty...</string>
+    <string name="empty_view_subtitle">add some by touching the plus button</string>
+
+    <!--sell button text-->
+    <string name="sell_button_text">SELL</string>
+
+    <!--hints for edit text fields-->
+    <string name="name_hint">Name</string>
+    <string name="price_hint">price</string>
+    <string name="quantity_hint">quantity</string>
+    <string name="email_hint">Supplier\'s email</string>
+    <string name="supplier_name_hint">Supplier\'s Name</string>
+    <string name="supplier">Supplier</string>
+
+    <!--buttons-->
+    <string name="pick_image">Pick Image</string>
+    <string name="receive_shipment">Receive shipment</string>
+    <string name="order_more">Order More</string>
+
+    <string name="error_inserting_new_item">error inserting new item</string>
+    <!-- details activity mode-->
+    <string name="edit_item_title">Edit Item</string>
+    <string name="add_item_title">Add Item</string>
+
+</resources>

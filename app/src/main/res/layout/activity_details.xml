@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+     android:layout_width="match_parent">
+<LinearLayout
+    android:id="@+id/activity_details"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.example.android.inventorywizard.DetailsActivity">
+    <ImageView
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_width"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/detail_image_view"
+        android:visibility="gone"/>
+    <!--name-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="@dimen/image_width"
+            android:text="@string/name_hint"
+            style="@style/CategoryStyle"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/edit_text_name"
+            android:hint="@string/name_hint"
+            android:layout_width="180dp"
+            android:layout_height="40dp" />
+    </LinearLayout>
+    <!--price-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="@dimen/image_width"
+            android:text="@string/price_hint"
+            style="@style/CategoryStyle"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/edit_text_price"
+            android:hint="@string/price_hint"
+            android:layout_width="180dp"
+            android:layout_height="40dp" />
+    </LinearLayout>
+    <!--quantity-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="@dimen/image_width"
+            android:text="@string/quantity_hint"
+            style="@style/CategoryStyle"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/edit_text_quantity"
+            android:hint="@string/quantity_hint"
+            android:layout_width="180dp"
+            android:layout_height="40dp" />
+    </LinearLayout>
+    <!--supplier-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            android:text="@string/supplier"
+            style="@style/CategoryStyle" />
+
+        <!-- Input fields -->
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp"
+            android:orientation="vertical">
+
+            <!-- Name field -->
+            <EditText
+                android:id="@+id/edit_text_supplier_name"
+                android:hint="@string/supplier_name_hint"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:inputType="textCapWords"/>
+
+            <!-- Breed field -->
+            <EditText
+                android:id="@+id/edit_text_supplier_email"
+                android:hint="@string/email_hint"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:inputType="textCapWords"/>
+        </LinearLayout>
+    </LinearLayout>
+    <!--image picker-->
+    <Button
+        android:background="@color/sellButtonColor"
+        android:id="@+id/image_picker_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="@string/pick_image"/>
+
+
+    <Button
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@color/sellButtonColor"
+        android:id="@+id/detail_receive_shipment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/receive_shipment"/>
+    <Button
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@color/sellButtonColor"
+        android:id="@+id/detail_sell"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/sell_button_text"/>
+    <Button
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@color/colorAccent"
+        android:textColor="@color/sellButtonTextColor"
+        android:id="@+id/detail_order_more"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/order_more"/>
+</LinearLayout>
+</ScrollView>
+
