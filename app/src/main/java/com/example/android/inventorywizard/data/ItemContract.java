@@ -36,6 +36,6 @@ public class ItemContract {
         public final static String COLUMN_QUANTITY= "quantity";
         public final static String COLUMN_SUPPLIER_NAME = "supplierName";
         public final static String COLUMN_SUPPLIER_EMAIL = "supplierEmail";
-        public final static String COLUMN_IMAGE_PATH = "imagePath";
+        public final static String COLUMN_IMAGE_URI = "imageUri";
     }
 }

@@ -19,7 +19,7 @@ public class ItemDbHelper extends SQLiteOpenHelper {
     private final static String CREATE_TABLE = "CREATE TABLE " + ItemEntry.TABLE_NAME +"(" + ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             ItemEntry.COLUMN_NAME + " TEXT NOT NULL, " + ItemEntry.COLUMN_PRICE + " INTEGER NOT NULL DEFAULT 0, " +
             ItemEntry.COLUMN_QUANTITY+ " INTEGER NOT NULL DEFAULT 0, " + ItemEntry.COLUMN_SUPPLIER_NAME + " TEXT NOT NULL, " +
-            ItemEntry.COLUMN_IMAGE_PATH + " TEXT NOT NULL DEFAULT ''," +
+            ItemEntry.COLUMN_IMAGE_URI + " TEXT NOT NULL DEFAULT ''," +
             ItemEntry.COLUMN_SUPPLIER_EMAIL + " TEXT NOT NULL);";
     private final static String DELETE_TABLE = "DELETE TABLE " + DATA_BASE_NAME;
     public ItemDbHelper(Context context){

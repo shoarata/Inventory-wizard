@@ -60,5 +60,7 @@
         android:layout_gravity="center"
         android:layout_height="60dp"
         android:id="@+id/list_item_sell_button"
-        android:focusable="false"/>
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        />
 </LinearLayout>

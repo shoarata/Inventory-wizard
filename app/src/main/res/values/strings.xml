@@ -24,5 +24,12 @@
     <!-- details activity mode-->
     <string name="edit_item_title">Edit Item</string>
     <string name="add_item_title">Add Item</string>
+    <!-- dialog -->
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    
+    <string name="not_enough_items_alert">Not eough items available</string>
+    <string name="succesful_sell">Sold</string>
 
+    <string name="something_went_wrong">ups Something went wrong :(</string>
 </resources>

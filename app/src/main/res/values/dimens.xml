@@ -6,5 +6,5 @@
     <dimen name="list_item_height">84dp</dimen>
 
     <!-- width of image detail view-->
-    <dimen name="image_width">120dp</dimen>
+    <dimen name="image_width">200dp</dimen>
 </resources>

@@ -74,18 +74,13 @@ public class ItemCursorAdapter extends CursorAdapter {
         values.put(ItemEntry.COLUMN_QUANTITY,newQuatity);
         values.put(ItemEntry.COLUMN_SUPPLIER_EMAIL,supplierEmail);
         values.put(ItemEntry.COLUMN_SUPPLIER_NAME,supplierName);
-        sell.setOnTouchListener(new View.OnTouchListener() {
+        sell.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
-                {
-                    //update current item entry with the new quantity
-                    if(newQuatity >=0) {
-                        context.getContentResolver().update(ContentUris.withAppendedId(ItemEntry.CONTENT_URI, id), values, null, null);
-                    }
+            public void onClick(View view) {
+                //update current item entry with the new quantity
+                if(newQuatity >=0) {
+                    context.getContentResolver().update(ContentUris.withAppendedId(ItemEntry.CONTENT_URI, id), values, null, null);
                 }
-
-                return false;
             }
         });
     }
