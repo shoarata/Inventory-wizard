@@ -31,6 +31,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static android.R.attr.dial;
+import static android.R.attr.fingerprintAuthDrawable;
+import static android.R.attr.marqueeRepeatLimit;
+import static android.R.attr.maxRecents;
 import static android.R.attr.path;
 import static android.R.attr.value;
 import static com.example.android.inventorywizard.data.ItemContract.*;
@@ -60,6 +63,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     Button mImagePicker;
     /**sell button**/
     Button mSellButton;
+    /** receive shipment button **/
+    Button mReceiveShipment;
     /** LOG TAG**/
     private final static String LOG_TAG = DetailsActivity.class.getSimpleName();
     @Override
@@ -73,9 +78,12 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         mEmail= (EditText) findViewById(R.id.edit_text_supplier_email);
         mSupplierName = (EditText) findViewById(R.id.edit_text_supplier_name);
         mImage = (ImageView)findViewById(R.id.detail_image_view);
+        //preventing the user from changing the quantity manually
+        mQuantity.setFocusable(false);
         //find buttons
         mImagePicker = (Button) findViewById(R.id.image_picker_button);
         mSellButton = (Button) findViewById(R.id.detail_sell);
+        mReceiveShipment = (Button) findViewById(R.id.detail_receive_shipment);
         //get intent
         Intent intent = getIntent();
         //get Uri of selected item
@@ -103,6 +111,13 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 openSellDialog();
             }
         });
+        //set up receive shipment button
+        mReceiveShipment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openReceiveShipmentDialog();
+            }
+        });
     }
 
     /** open sell dialog to indicate how many items you want to sell**/
@@ -110,13 +125,13 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("How many?");
 
-// Set up the input
+        // Set up the input
         final EditText input = new EditText(this);
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(input);
 
-// Set up the buttons
+        // Set up the buttons
         builder.setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -140,6 +155,47 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 }
                 else{
                     (Toast.makeText(DetailsActivity.this,getString(R.string.not_enough_items_alert),Toast.LENGTH_SHORT)).show();
+                }
+            }
+        });
+        builder.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+    /** open receive shipment dialog to indicate how many items you are receiving **/
+    private void openReceiveShipmentDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("How many?");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // increment item quantity
+                // get current quantity
+                int currentQty = Integer.parseInt(mQuantity.getText().toString());
+                //calculate new quatity
+                int newQuantity = currentQty + Integer.parseInt(input.getText().toString());
+                ContentValues values = new ContentValues();
+                values.put(ItemEntry.COLUMN_QUANTITY,newQuantity);
+                //update item quantity
+                int numUpdated = getContentResolver().update(mCurrentItemUri,values,null,null);
+                if(numUpdated>0){
+                    (Toast.makeText(DetailsActivity.this,getString(R.string.items_received),Toast.LENGTH_SHORT)).show();
+                }
+                else{
+                    (Toast.makeText(DetailsActivity.this,getString(R.string.something_went_wrong),Toast.LENGTH_SHORT)).show();
                 }
             }
         });

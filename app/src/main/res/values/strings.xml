@@ -27,9 +27,10 @@
     <!-- dialog -->
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
-    
+    <!-- sell dialog-->
     <string name="not_enough_items_alert">Not eough items available</string>
     <string name="succesful_sell">Sold</string>
-
+    <!--receive shipment dialog-->
+    <string name="items_received">Items received</string>
     <string name="something_went_wrong">ups Something went wrong :(</string>
 </resources>
