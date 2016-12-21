@@ -29,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static android.view.View.GONE;
 import static com.example.android.inventorywizard.data.ItemContract.*;
 
 public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
@@ -91,6 +92,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         if(mCurrentItemUri == null){
             setTitle(getString(R.string.add_item_title));
             invalidateOptionsMenu();
+            mSellButton.setVisibility(GONE);
+            mReceiveShipment.setVisibility(GONE);
+            mOrderMore.setVisibility(GONE);
         }
         else{
             setTitle(getString(R.string.edit_item_title));

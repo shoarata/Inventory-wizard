@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,13 +19,17 @@ import com.example.android.inventorywizard.data.ItemContract;
 import com.example.android.inventorywizard.data.ItemContract.ItemEntry;
 import com.example.android.inventorywizard.data.ItemDbHelper;
 
+import static android.R.attr.id;
+
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
     /** list to hold product info**/
-    ListView mListView;
+    private ListView mListView;
     /**cursor adapter for each item in the list **/
-    ItemCursorAdapter mItemAdapter;
+    private ItemCursorAdapter mItemAdapter;
     /** Id for the Item Loader**/
     private final static int LOADER_ID = 1;
+    /** fab button for adding item **/
+    private FloatingActionButton mAddItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         // find listview
         mListView = (ListView)findViewById(R.id.list_view);
+        //find add item button
+        mAddItem = (FloatingActionButton) findViewById(R.id.add_product_button);
         //initialize ItemCursorAdapter, that will be filled later by the loader
         mItemAdapter = new ItemCursorAdapter(this,null);
         //attach adapter to list view
@@ -52,7 +59,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
-
+        //open add item
+        mAddItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,DetailsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
