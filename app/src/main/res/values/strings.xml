@@ -33,4 +33,12 @@
     <!--receive shipment dialog-->
     <string name="items_received">Items received</string>
     <string name="something_went_wrong">ups Something went wrong :(</string>
+
+    <string name="how_many">How many?</string>
+
+    <!-- order email-->
+    <string name="dear">Dear</string>
+    <string name="body_pre">I am glad to tell you we are doing well with your product, that is why I would like to Order</string>
+    <string name="body_post">units more.\n I will like to discuss if you have time shipment details.\n I look forward to hearing from you\n</string>
+    <string name="subject">Order</string>
 </resources>

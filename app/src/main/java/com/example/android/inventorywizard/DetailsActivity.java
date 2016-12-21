@@ -1,6 +1,8 @@
 package com.example.android.inventorywizard;
 
 import android.app.LoaderManager;
+import android.content.ActivityNotFoundException;
+import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -11,13 +13,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -25,17 +25,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static android.R.attr.dial;
-import static android.R.attr.fingerprintAuthDrawable;
-import static android.R.attr.marqueeRepeatLimit;
-import static android.R.attr.maxRecents;
-import static android.R.attr.path;
-import static android.R.attr.value;
 import static com.example.android.inventorywizard.data.ItemContract.*;
 
 public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
@@ -65,12 +58,17 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     Button mSellButton;
     /** receive shipment button **/
     Button mReceiveShipment;
+    /** order button **/
+    Button mOrderMore;
+    /** Contents of the current item **/
+    ContentValues mValues;
     /** LOG TAG**/
     private final static String LOG_TAG = DetailsActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        mValues = new ContentValues();
         // find fields in the item form
         mName = (EditText) findViewById(R.id.edit_text_name);
         mPrice = (EditText) findViewById(R.id.edit_text_price);
@@ -81,9 +79,10 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         //preventing the user from changing the quantity manually
         mQuantity.setFocusable(false);
         //find buttons
-        mImagePicker = (Button) findViewById(R.id.image_picker_button);
-        mSellButton = (Button) findViewById(R.id.detail_sell);
+        mImagePicker     = (Button) findViewById(R.id.image_picker_button);
+        mSellButton      = (Button) findViewById(R.id.detail_sell);
         mReceiveShipment = (Button) findViewById(R.id.detail_receive_shipment);
+        mOrderMore       = (Button) findViewById(R.id.detail_order_more);
         //get intent
         Intent intent = getIntent();
         //get Uri of selected item
@@ -118,12 +117,64 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 openReceiveShipmentDialog();
             }
         });
+        //set up order more button
+        mOrderMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                placeOrder();
+            }
+        });
     }
 
+    /** call intent to email the provider for more items **/
+    private void placeOrder(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.how_many));
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // get order quantity
+                int orderQty = Integer.parseInt(input.getText().toString());
+                // get name of provider
+                String providerName = mValues.getAsString(ItemEntry.COLUMN_SUPPLIER_NAME);
+                // get provider email
+                String providerEmail = mValues.getAsString(ItemEntry.COLUMN_SUPPLIER_EMAIL);
+                // create body
+                String bodyText = getString(R.string.body_pre) + " " + orderQty + " " + getString(R.string.body_post);
+
+                //start intent
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                emailIntent.setData(Uri.parse("mailto:"+providerEmail));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.subject));
+                emailIntent.putExtra(Intent.EXTRA_TEXT,bodyText);
+                try {
+                    startActivity(emailIntent);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(DetailsActivity.this,getString(R.string.something_went_wrong),Toast.LENGTH_SHORT);
+                }
+            }
+        });
+        builder.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
     /** open sell dialog to indicate how many items you want to sell**/
     private void openSellDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("How many?");
+        builder.setTitle(getString(R.string.how_many));
 
         // Set up the input
         final EditText input = new EditText(this);
@@ -137,7 +188,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             public void onClick(DialogInterface dialog, int which) {
                // decrease item quantity
                 // get current quantity
-                int currentQty = Integer.parseInt(mQuantity.getText().toString());
+                int currentQty = mValues.getAsInteger(ItemEntry.COLUMN_QUANTITY);
                 //calculate new quatity
                 int newQuantity = currentQty - Integer.parseInt(input.getText().toString());
                 if(newQuantity>0){
@@ -170,7 +221,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     /** open receive shipment dialog to indicate how many items you are receiving **/
     private void openReceiveShipmentDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("How many?");
+        builder.setTitle(getString(R.string.how_many));
 
         // Set up the input
         final EditText input = new EditText(this);
@@ -184,7 +235,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             public void onClick(DialogInterface dialog, int which) {
                 // increment item quantity
                 // get current quantity
-                int currentQty = Integer.parseInt(mQuantity.getText().toString());
+                int currentQty = mValues.getAsInteger(ItemEntry.COLUMN_QUANTITY);
                 //calculate new quatity
                 int newQuantity = currentQty + Integer.parseInt(input.getText().toString());
                 ContentValues values = new ContentValues();
@@ -313,6 +364,11 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             mQuantity.setText(cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_QUANTITY)));
             mEmail.setText(cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_SUPPLIER_EMAIL)));
             mSupplierName.setText(cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_SUPPLIER_NAME)));
+            //copy values to mValues for later usage
+            mValues.put(ItemEntry.COLUMN_QUANTITY,cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_QUANTITY)));
+            mValues.put(ItemEntry.COLUMN_SUPPLIER_NAME,cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_SUPPLIER_NAME)));
+            mValues.put(ItemEntry.COLUMN_SUPPLIER_EMAIL,cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_SUPPLIER_EMAIL)));
+
             if (!cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_IMAGE_URI)).isEmpty()) {
                 final Uri imageUri = Uri.parse(cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_IMAGE_URI)));
                 mImage.setVisibility(View.VISIBLE);
