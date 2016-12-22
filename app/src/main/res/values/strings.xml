@@ -20,7 +20,6 @@
     <string name="receive_shipment">Receive shipment</string>
     <string name="order_more">Order More</string>
 
-    <string name="error_inserting_new_item">error inserting new item</string>
     <!-- details activity mode-->
     <string name="edit_item_title">Edit Item</string>
     <string name="add_item_title">Add Item</string>
@@ -41,4 +40,14 @@
     <string name="body_pre">I am glad to tell you we are doing well with your product, that is why I would like to Order</string>
     <string name="body_post">units more.\n I will like to discuss if you have time shipment details.\n I look forward to hearing from you\n</string>
     <string name="subject">Order</string>
+    
+    <!-- menu -->
+    <string name="action_save">save</string>
+    <string name="action_delete">delete</string>
+
+    <!--saving and deleting-->
+    <string name="item_saved">Item saved</string>
+    <string name="error_inserting_new_item">error inserting new item</string>
+    <string name="error_editing_item">Error editing item</string>
+    <string name="item_succesfuly_edited">Item updated</string>
 </resources>
