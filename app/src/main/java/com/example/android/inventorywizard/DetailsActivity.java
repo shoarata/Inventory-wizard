@@ -32,6 +32,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static android.R.attr.name;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.view.View.GONE;
 import static com.example.android.inventorywizard.data.ItemContract.*;
 
@@ -175,12 +177,10 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             // Respond to save Item
             case R.id.action_save:
                 saveItem();
-                finish();
                 return true;
             // Respond to delete Item
             case R.id.action_delete:
                 showDeleteConfirmationDialog();
-                finish();
                 return true;
             //if up back button is pressed
             case android.R.id.home:
@@ -215,12 +215,46 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             return;
         }
         // creat contentvalue var
-        String name           = mName.getText().toString();
-        int price             = Integer.parseInt(mPrice.getText().toString());
+        String name;
+        if(mName.getText().toString().isEmpty()){
+            Toast.makeText(DetailsActivity.this,getString(R.string.name_needed),Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else{
+            name = mName.getText().toString();
+        }
+        int price;
+        if(mPrice.getText().toString().isEmpty()){
+            price             = 0;
+        }
+        else {
+            price             = Integer.parseInt(mPrice.getText().toString());
+        }
         int quantity          = 0;
-        String suppliersName  = mSupplierName.getText().toString();
-        String suppliersEmail = mEmail.getText().toString();
-        String imageUri       = mNewImageUri.toString();
+        String suppliersName;
+        if(mSupplierName.getText().toString().isEmpty()) {
+            suppliersName = getString(R.string.no_supplier);
+        }
+        else{
+            suppliersName = mSupplierName.getText().toString();
+        }
+
+        String suppliersEmail;
+        if(mEmail.getText().toString().isEmpty()){
+            suppliersEmail = getString(R.string.no_email);
+        }
+        else{
+            suppliersEmail = mEmail.getText().toString();
+        }
+
+        String imageUri;
+        if(mNewImageUri == null){
+            imageUri          = "";
+        }
+        else {
+            imageUri = mNewImageUri.toString();
+        }
+
         ContentValues values  = new ContentValues();
         values.put(ItemEntry.COLUMN_NAME,name);
         values.put(ItemEntry.COLUMN_PRICE,price);
@@ -237,10 +271,10 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             else{
                 Toast.makeText(DetailsActivity.this, getString(R.string.item_saved),Toast.LENGTH_SHORT).show();
             }
+            finish();
         }
         //otherwise -> editing an existing item
         else{
-            values.put(ItemEntry.COLUMN_QUANTITY,quantity);
             int numItemsUpdated= getContentResolver().update(mCurrentItemUri,values,null,null);
             if(numItemsUpdated > 0){
                 (Toast.makeText(this,getString(R.string.item_succesfuly_edited),Toast.LENGTH_SHORT)).show();
@@ -248,6 +282,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             else{
                 (Toast.makeText(this,R.string.error_editing_item,Toast.LENGTH_SHORT)).show();
             }
+            finish();
         }
 
     }
@@ -257,7 +292,38 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     }
     /** shows confirmation dialog before deleting **/
     private void showDeleteConfirmationDialog(){
-        //!!!
+        // Create an AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_dialog);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //delete item confirmed
+                deleteItem();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //cancel, do not delete
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    /** delete current item **/
+    private void deleteItem(){
+        int numItemsDeleted = getContentResolver().delete(mCurrentItemUri,null,null);
+        if(numItemsDeleted == 1){
+            Toast.makeText(DetailsActivity.this,getString(R.string.successfuly_deleted),Toast.LENGTH_SHORT);
+        }
+        else{
+            Toast.makeText(DetailsActivity.this,getString(R.string.something_went_wrong),Toast.LENGTH_SHORT);
+        }
+        finish();
     }
     /** shows dialog that changes won't be saved **/
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardListener){
@@ -509,7 +575,13 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             mQuantity.setText(cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_QUANTITY)));
             mEmail.setText(cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_SUPPLIER_EMAIL)));
             mSupplierName.setText(cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_SUPPLIER_NAME)));
-            mNewImageUri  = Uri.parse(cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_IMAGE_URI)));
+            String imageUri = cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_IMAGE_URI));
+            if(imageUri.isEmpty()){
+                mNewImageUri = null;
+            }
+            else {
+                mNewImageUri = Uri.parse(imageUri);
+            }
             //copy values to mValues for later usage
             mValues.put(ItemEntry.COLUMN_QUANTITY,cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_QUANTITY)));
             mValues.put(ItemEntry.COLUMN_SUPPLIER_NAME,cursor.getString(cursor.getColumnIndex(ItemEntry.COLUMN_SUPPLIER_NAME)));

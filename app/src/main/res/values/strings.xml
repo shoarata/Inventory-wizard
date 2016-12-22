@@ -50,4 +50,11 @@
     <string name="error_inserting_new_item">error inserting new item</string>
     <string name="error_editing_item">Error editing item</string>
     <string name="item_succesfuly_edited">Item updated</string>
+    <string name="delete_dialog">Are you sure?</string>
+    <string name="delete">DELETE</string>
+    <string name="cancel">Cancel</string>
+    <string name="successfuly_deleted">Item deleted</string>
+    <string name="no_supplier">No supplier\'s name</string>
+    <string name="no_email">No supplier\'s email</string>
+    <string name="name_needed">Name is required</string>
 </resources>
