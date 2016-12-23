@@ -317,7 +317,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public void onBackPressed() {
-        if(mItemHasChanged) {
+        if(!mItemHasChanged) {
             super.onBackPressed();
             return;
         }
@@ -532,6 +532,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                             mImage.setImageBitmap(getBitmapFromUri(mNewImageUri));
                         }
                     });
+                    mImage.setImageBitmap(getBitmapFromUri(mNewImageUri));
+
                 }
                 break;
         }
