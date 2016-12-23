@@ -57,4 +57,9 @@
     <string name="no_supplier">No supplier\'s name</string>
     <string name="no_email">No supplier\'s email</string>
     <string name="name_needed">Name is required</string>
+    <string name="action_delete_all">Delete All Items</string>
+
+    <string name="unsaved_changes_dialog_msg">Are you sure you don\'t want to save your work?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
 </resources>

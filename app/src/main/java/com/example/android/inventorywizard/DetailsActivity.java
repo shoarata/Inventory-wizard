@@ -214,7 +214,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             finish();
             return;
         }
-        // creat contentvalue var
+        // create contentvalue var
         String name;
         if(mName.getText().toString().isEmpty()){
             Toast.makeText(DetailsActivity.this,getString(R.string.name_needed),Toast.LENGTH_SHORT).show();
@@ -314,6 +314,45 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
+    @Override
+    public void onBackPressed() {
+        if(mItemHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+
+        showUnsavedChangesDialog(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+    }
+
+    /**
+     * show dialog to confirm that the changes will not be saved
+     */
+    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss the dialog
+                // and continue editing the pet.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
     /** delete current item **/
     private void deleteItem(){
         int numItemsDeleted = getContentResolver().delete(mCurrentItemUri,null,null);
@@ -325,11 +364,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         }
         finish();
     }
-    /** shows dialog that changes won't be saved **/
-    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardListener){
-        // !!!
-        finish();
-    }
+
     /** call intent to email the provider for more items **/
     private void placeOrder(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
